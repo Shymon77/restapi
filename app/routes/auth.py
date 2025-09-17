@@ -33,3 +33,41 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
     access_token = auth.create_access_token({"sub": db_user.email})
     refresh_token = auth.create_refresh_token({"sub": db_user.email})
     return Token(access_token=access_token, refresh_token=refresh_token)
+
+
+from app.utils.email import confirm_token
+from app.models import User
+
+
+@auth_bp.route("/verify/<token>", methods=["GET"])
+def confirm_email(token):
+    email = confirm_token(token)
+    if not email:
+        return jsonify({"message": "Недійсний або прострочений токен"}), 400
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"message": "Користувача не знайдено"}), 404
+    if user.confirmed:
+        return jsonify({"message": "Email вже підтверджено"}), 200
+
+    user.confirmed = True
+    db.session.commit()
+    return jsonify({"message": "Email підтверджено!"}), 200
+
+
+send_confirmation_email(user.email)
+
+
+@user_bp.route("/avatar", methods=["POST"])
+@jwt_required()
+def upload_avatar():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    file = request.files["avatar"]
+    result = cloudinary.uploader.upload(file)
+
+    user.avatar_url = result["secure_url"]
+    db.session.commit()
+
+    return jsonify({"avatar": user.avatar_url}), 200

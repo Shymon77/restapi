@@ -26,3 +26,12 @@ def get_current_user(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     return user
+
+
+from app.extensions import limiter
+
+
+@contacts_bp.route("/", methods=["POST"])
+@limiter.limit("5 per minute")
+@jwt_required()
+def create_contact(): ...

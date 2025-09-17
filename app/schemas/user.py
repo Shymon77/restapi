@@ -18,3 +18,6 @@ class Token(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+
+confirmed = db.Column(db.Boolean, default=False)
