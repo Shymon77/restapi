@@ -3,6 +3,19 @@ from .database import Base
 
 
 class Contact(Base):
+    """
+    Модель контакта пользователя.
+
+    Атрибуты:
+        id (int): Уникальный идентификатор контакта (первичный ключ).
+        first_name (str): Имя контакта.
+        last_name (str): Фамилия контакта.
+        email (str): Электронная почта контакта (уникальна).
+        phone (str): Номер телефона контакта.
+        birthday (date): Дата рождения контакта.
+        extra (str, optional): Дополнительная информация о контакте (необязательное поле).
+    """
+
     __tablename__ = "contacts"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -19,6 +32,15 @@ from app.database import Base
 
 
 class User(Base):
+    """
+    Модель пользователя.
+
+    Атрибуты:
+        id (int): Уникальный идентификатор пользователя (первичный ключ).
+        email (str): Электронная почта пользователя (уникальна, обязательна).
+        password (str): Хэш пароля пользователя (обязателен).
+    """
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)

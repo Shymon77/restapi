@@ -16,3 +16,7 @@ app = FastAPI()
 
 app.include_router(auth.router)
 app.include_router(contacts.router)
+
+from app.routes.contacts import contacts_bp
+
+app.include_router(contacts_bp)

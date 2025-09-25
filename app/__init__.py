@@ -1,5 +1,6 @@
 from flask import Flask
 from app.extensions import mail, limiter, cors
+from app.contacts import contacts_bp
 
 
 def create_app():
@@ -15,7 +16,6 @@ def create_app():
     return app
 
 
-from flask_cors import CORS
+from app.contacts import contacts_bp
 
-cors = CORS()
-cors.init_app(app)
+app.register_blueprint(contacts_bp)
